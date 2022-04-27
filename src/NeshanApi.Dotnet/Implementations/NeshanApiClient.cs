@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using NeshanApi.Dotnet.Exceptions.InternalExceptions;
 using NeshanApi.Dotnet.Interfaces;
+using NeshanApi.Dotnet.Models;
 using NeshanApi.Dotnet.Models.Configs;
 using NeshanApi.Dotnet.Models.Results;
 using NeshanApi.Dotnet.Utilities;
@@ -36,7 +40,7 @@ namespace NeshanApi.Dotnet.Implementations
 
         public async Task<NeshanReverseGeocodingResult> ReverseGeocoding(double latitude, double longitude)
         {
-            var uri = $"reverse?lat={latitude}&lng={longitude}";
+            var uri = $"v4/reverse?lat={latitude}&lng={longitude}";
             var response = await _client.GetAsync(uri);
             var result = await HandleResponse<NeshanReverseGeocodingResult>(response);
             return result;
@@ -44,16 +48,36 @@ namespace NeshanApi.Dotnet.Implementations
 
         public async Task<NeshanGeocodingResult> Geocoding(string address)
         {
-            var uri = $"geocoding?address={address}";
+            var uri = $"v4/geocoding?address={address}";
             var response = await _client.GetAsync(uri);
             var result = await HandleResponse<NeshanGeocodingResult>(response);
 
             if (result.Status == "NO_RESULT")
                 throw new NeshanNoResultException();
-        
+
             return result;
         }
-        
+
+        public async Task<NeshanDistanceMatrixResult> DistanceMatrix(
+            DistanceMatrixType distanceMatrixType,
+            IEnumerable<Location> origins,
+            IEnumerable<Location> destinations)
+        {
+            var uri = $"v1/distance-matrix?type={distanceMatrixType.ToString()}";
+            
+            var originsUrl = string.Join('|', origins
+                .Select(o => $"{o.Latitude},{o.Longitude}").ToList());
+            
+            var destinationsUrl = string.Join('|', destinations
+                .Select(o => $"{o.Latitude},{o.Longitude}").ToList());
+
+            uri += $"&origins={originsUrl}&destinations={destinationsUrl}";
+            
+            var response = await _client.GetAsync(uri);
+            var result = await HandleResponse<NeshanDistanceMatrixResult>(response);
+            return result;
+        }
+
         #endregion
 
         #region Private Methods
@@ -71,13 +95,13 @@ namespace NeshanApi.Dotnet.Implementations
 
             NeshanApiErrorHandler.Handle(responseString, responseStatus);
             response.EnsureSuccessStatusCode();
-            
+
             return default;
         }
 
         private void ConfigHttpClient()
         {
-            _client.BaseAddress = new Uri("https://api.neshan.org/v4/");
+            _client.BaseAddress = new Uri("https://api.neshan.org/");
             _client.DefaultRequestHeaders.Add("Api-Key", _config.ApiKey);
         }
 
