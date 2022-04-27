@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NeshanApi.Dotnet.Exceptions
+namespace NeshanApi.Dotnet.Exceptions.ApiExceptions
 {
     public class BaseNeshanException : Exception
     {

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NeshanApi.Dotnet.Exceptions;
+using NeshanApi.Dotnet.Exceptions.ApiExceptions;
 using NeshanApi.Dotnet.Models.Results.Errors;
 using Newtonsoft.Json;
 

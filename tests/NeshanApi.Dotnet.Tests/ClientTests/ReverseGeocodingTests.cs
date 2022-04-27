@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using NeshanApi.Dotnet.Exceptions;
+using NeshanApi.Dotnet.Exceptions.ApiExceptions;
 using NeshanApi.Dotnet.Models.Results;
 using NeshanApi.Dotnet.Tests.Factories;
 using Newtonsoft.Json;

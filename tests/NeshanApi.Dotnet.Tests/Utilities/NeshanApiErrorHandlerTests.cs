@@ -1,4 +1,5 @@
 ﻿using NeshanApi.Dotnet.Exceptions;
+using NeshanApi.Dotnet.Exceptions.ApiExceptions;
 using NeshanApi.Dotnet.Utilities;
 using Xunit;
 

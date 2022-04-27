@@ -6,5 +6,6 @@ namespace NeshanApi.Dotnet.Interfaces
     public interface INeshanApiClient
     {
         Task<NeshanReverseGeocodingResult> ReverseGeocoding(double latitude, double longitude);
+        Task<NeshanGeocodingResult> Geocoding(string address);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using NeshanApi.Dotnet.Exceptions.InternalExceptions;
 using NeshanApi.Dotnet.Interfaces;
 using NeshanApi.Dotnet.Models.Configs;
 using NeshanApi.Dotnet.Models.Results;
@@ -41,6 +42,18 @@ namespace NeshanApi.Dotnet.Implementations
             return result;
         }
 
+        public async Task<NeshanGeocodingResult> Geocoding(string address)
+        {
+            var uri = $"geocoding?address={address}";
+            var response = await _client.GetAsync(uri);
+            var result = await HandleResponse<NeshanGeocodingResult>(response);
+
+            if (result.Status == "NO_RESULT")
+                throw new NeshanNoResultException();
+        
+            return result;
+        }
+        
         #endregion
 
         #region Private Methods
