@@ -16,5 +16,11 @@ namespace NeshanApi.Dotnet.Interfaces
             IEnumerable<Location> destinations);
 
         Task<LocationBasedSearchResult> LocationBasedSearch(Location location, string term);
+
+        Task<TravelingSalesmanProblemResult> TravelingSalesmanProblem(
+            IEnumerable<Location> waypoints,
+            bool roundTrip = true,
+            bool sourceIsAnyPoint = true,
+            bool lastIsAnyPoint = true);
     }
 }

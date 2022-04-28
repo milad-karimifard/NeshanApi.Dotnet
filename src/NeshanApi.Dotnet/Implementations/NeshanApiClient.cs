@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using NeshanApi.Dotnet.Exceptions.InternalExceptions;
 using NeshanApi.Dotnet.Interfaces;
@@ -87,6 +86,28 @@ namespace NeshanApi.Dotnet.Implementations
             return result;
         }
 
+        public async Task<TravelingSalesmanProblemResult> TravelingSalesmanProblem(
+            IEnumerable<Location> waypoints,
+            bool roundTrip = true,
+            bool sourceIsAnyPoint = true,
+            bool lastIsAnyPoint = true)
+        {
+            var uri = $"v3/trip?";
+            
+            var waypointsUrl = string.Join('|', waypoints
+                .Select(o => $"{o.Latitude},{o.Longitude}").ToList());
+
+            uri += $"waypoints={waypointsUrl}&" +
+                   $"roundTrip={roundTrip}&" +
+                   $"sourceIsAnyPoint={sourceIsAnyPoint}&" +
+                   $"lastIsAnyPoint={lastIsAnyPoint}";
+            
+            var response = await _client.GetAsync(uri);
+            var result = await HandleResponse<TravelingSalesmanProblemResult>(response);
+            
+            return result;
+        }
+        
         #endregion
 
         #region Private Methods
