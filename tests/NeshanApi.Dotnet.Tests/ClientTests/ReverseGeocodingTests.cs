@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using NeshanApi.Dotnet.Exceptions;
 using NeshanApi.Dotnet.Exceptions.ApiExceptions;
+using NeshanApi.Dotnet.Models;
 using NeshanApi.Dotnet.Models.Results;
 using NeshanApi.Dotnet.Tests.Factories;
 using Newtonsoft.Json;
@@ -17,14 +17,24 @@ namespace NeshanApi.Dotnet.Tests.ClientTests
         public async Task Call_With_NotIran_GeoLocation_Should_Throw_NeshanCoordinateParseException()
         {
             var testCase = NeshanClientFactory.GetInstance();
-            await Assert.ThrowsAsync<NeshanCoordinateParseException>(async () => await testCase.ReverseGeocoding(0, 0));
+            var location = new Location()
+            {
+                Latitude = 0,
+                Longitude = 0
+            };
+            await Assert.ThrowsAsync<NeshanCoordinateParseException>(async () => await testCase.ReverseGeocoding(location));
         }
 
         [Fact]
         public async Task Call_With_Iran_GeoLocation_Should_Be_Fine()
         {
             var testCase = NeshanClientFactory.GetInstance();
-            var result = await testCase.ReverseGeocoding(35.831827, 50.978413);
+            var location = new Location()
+            {
+                Latitude = 35.831827,
+                Longitude = 50.978413
+            };
+            var result = await testCase.ReverseGeocoding(location);
 
             var expectedResultJson = @"
         {

@@ -38,9 +38,9 @@ namespace NeshanApi.Dotnet.Implementations
 
         #region Methods
 
-        public async Task<NeshanReverseGeocodingResult> ReverseGeocoding(double latitude, double longitude)
+        public async Task<NeshanReverseGeocodingResult> ReverseGeocoding(Location location)
         {
-            var uri = $"v4/reverse?lat={latitude}&lng={longitude}";
+            var uri = $"v4/reverse?lat={location.Latitude}&lng={location.Longitude}";
             var response = await _client.GetAsync(uri);
             var result = await HandleResponse<NeshanReverseGeocodingResult>(response);
             return result;
@@ -75,6 +75,15 @@ namespace NeshanApi.Dotnet.Implementations
             
             var response = await _client.GetAsync(uri);
             var result = await HandleResponse<NeshanDistanceMatrixResult>(response);
+            return result;
+        }
+
+        public async Task<LocationBasedSearchResult> LocationBasedSearch(Location location, string term)
+        {
+            var uri = $"v1/search?term={term}&lat={location.Latitude}&lng={location.Longitude}";
+            var response = await _client.GetAsync(uri);
+            var result = await HandleResponse<LocationBasedSearchResult>(response);
+            
             return result;
         }
 
