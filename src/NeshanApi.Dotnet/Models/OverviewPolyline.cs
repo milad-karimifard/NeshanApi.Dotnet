@@ -3,21 +3,18 @@ using Newtonsoft.Json;
 
 namespace NeshanApi.Dotnet.Models
 {
-    public class Distance : IEquatable<Distance>
+    public class OverviewPolyline : IEquatable<OverviewPolyline>
     {
-        [JsonProperty("value")]
-        public double Value { get; set; }
-
-        [JsonProperty("text")]
-        public string Text { get; set; }
+        [JsonProperty("points")]
+        public string Points { get; set; }
 
         #region Equatablity
 
-        public bool Equals(Distance other)
+        public bool Equals(OverviewPolyline other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Value == other.Value && Text == other.Text;
+            return Points == other.Points;
         }
 
         public override bool Equals(object obj)
@@ -25,12 +22,12 @@ namespace NeshanApi.Dotnet.Models
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Distance) obj);
+            return Equals((OverviewPolyline) obj);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Value, Text);
+            return (Points != null ? Points.GetHashCode() : 0);
         }
 
         #endregion

@@ -1,23 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace NeshanApi.Dotnet.Models
 {
-    public class Distance : IEquatable<Distance>
+    public class Route : IEquatable<Route>
     {
-        [JsonProperty("value")]
-        public double Value { get; set; }
+        [JsonProperty("legs")] public List<Leg> Legs { get; set; }
 
-        [JsonProperty("text")]
-        public string Text { get; set; }
+        [JsonProperty("overview_polyline")] public OverviewPolyline OverviewPolyline { get; set; }
 
         #region Equatablity
 
-        public bool Equals(Distance other)
+        public bool Equals(Route other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Value == other.Value && Text == other.Text;
+            return Legs.Equals(other.Legs) &&
+                   OverviewPolyline.Equals(other.OverviewPolyline);
         }
 
         public override bool Equals(object obj)
@@ -25,12 +25,12 @@ namespace NeshanApi.Dotnet.Models
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Distance) obj);
+            return Equals((Route) obj);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Value, Text);
+            return HashCode.Combine(Legs, OverviewPolyline);
         }
 
         #endregion

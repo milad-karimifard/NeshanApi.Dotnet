@@ -63,15 +63,15 @@ namespace NeshanApi.Dotnet.Implementations
             IEnumerable<Location> destinations)
         {
             var uri = $"v1/distance-matrix?type={distanceMatrixType.ToString()}";
-            
+
             var originsUrl = string.Join('|', origins
                 .Select(o => $"{o.Latitude},{o.Longitude}").ToList());
-            
+
             var destinationsUrl = string.Join('|', destinations
                 .Select(o => $"{o.Latitude},{o.Longitude}").ToList());
 
             uri += $"&origins={originsUrl}&destinations={destinationsUrl}";
-            
+
             var response = await _client.GetAsync(uri);
             var result = await HandleResponse<NeshanDistanceMatrixResult>(response);
             return result;
@@ -82,7 +82,7 @@ namespace NeshanApi.Dotnet.Implementations
             var uri = $"v1/search?term={term}&lat={location.Latitude}&lng={location.Longitude}";
             var response = await _client.GetAsync(uri);
             var result = await HandleResponse<LocationBasedSearchResult>(response);
-            
+
             return result;
         }
 
@@ -93,7 +93,7 @@ namespace NeshanApi.Dotnet.Implementations
             bool lastIsAnyPoint = true)
         {
             var uri = $"v3/trip?";
-            
+
             var waypointsUrl = string.Join('|', waypoints
                 .Select(o => $"{o.Latitude},{o.Longitude}").ToList());
 
@@ -101,13 +101,92 @@ namespace NeshanApi.Dotnet.Implementations
                    $"roundTrip={roundTrip}&" +
                    $"sourceIsAnyPoint={sourceIsAnyPoint}&" +
                    $"lastIsAnyPoint={lastIsAnyPoint}";
-            
+
             var response = await _client.GetAsync(uri);
             var result = await HandleResponse<TravelingSalesmanProblemResult>(response);
+
+            return result;
+        }
+
+        public async Task<NeshanDirectionResult> Direction(
+            DirectionVehicleType vehicleType,
+            Location origin,
+            Location destination,
+            short bearing,
+            IEnumerable<Location> waypoints = null,
+            bool avoidTrafficZone = false,
+            bool avoidOddEvenZone = false,
+            bool alternative = false)
+        {
+            var uri = $"v4/direction?type={vehicleType.ToString().ToLower()}&" +
+                      $"origin={origin.Latitude},{origin.Longitude}&" +
+                      $"destination={destination.Latitude},{destination.Longitude}&" +
+                      $"bearing={bearing}&" +
+                      $"avoidTrafficZone={avoidTrafficZone}&" +
+                      $"avoidOddEvenZone={avoidOddEvenZone}&" +
+                      $"alternative={alternative}";
+
+            if (waypoints != null)
+            {
+                var locations = waypoints.ToList();
+
+                if (locations.Any())
+                {
+                    var waypointsUrl = string.Join('|', locations
+                        .Select(o => $"{o.Latitude},{o.Longitude}")
+                        .ToList());
+                    uri += $"&waypoints={waypointsUrl}";
+                }
+            }
+            
+            var response = await _client.GetAsync(uri);
+            var result = await HandleResponse<NeshanDirectionResult>(response);
+
+            if (result.Routes is null)
+                throw new NeshanNoRouteFoundException();
             
             return result;
         }
-        
+
+        public async Task<NeshanDirectionResult> DirectionWithOutTraffic(
+            Location origin,
+            Location destination,
+            short bearing,
+            IEnumerable<Location> waypoints = null,
+            bool avoidTrafficZone = false,
+            bool avoidOddEvenZone = false,
+            bool alternative = false)
+        {
+            var uri = $"v4/direction/no-traffic?type={DirectionVehicleType.Car.ToString().ToLower()}&" +
+                      $"origin={origin.Latitude},{origin.Longitude}&" +
+                      $"destination={destination.Latitude},{destination.Longitude}&" +
+                      $"bearing={bearing}&" +
+                      $"avoidTrafficZone={avoidTrafficZone}&" +
+                      $"avoidOddEvenZone={avoidOddEvenZone}&" +
+                      $"alternative={alternative}";
+
+            if (waypoints != null)
+            {
+                var locations = waypoints.ToList();
+
+                if (locations.Any())
+                {
+                    var waypointsUrl = string.Join('|', locations
+                        .Select(o => $"{o.Latitude},{o.Longitude}")
+                        .ToList());
+                    uri += $"&waypoints={waypointsUrl}";
+                }
+            }
+            
+            var response = await _client.GetAsync(uri);
+            var result = await HandleResponse<NeshanDirectionResult>(response);
+            
+            if (result.Routes is null)
+                throw new NeshanNoRouteFoundException();
+
+            return result;
+        }
+
         #endregion
 
         #region Private Methods

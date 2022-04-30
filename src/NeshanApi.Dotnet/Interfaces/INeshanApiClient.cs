@@ -22,5 +22,24 @@ namespace NeshanApi.Dotnet.Interfaces
             bool roundTrip = true,
             bool sourceIsAnyPoint = true,
             bool lastIsAnyPoint = true);
+
+        Task<NeshanDirectionResult> Direction(
+            DirectionVehicleType vehicleType,
+            Location origin,
+            Location destination,
+            short bearing,
+            IEnumerable<Location> waypoints = null,
+            bool avoidTrafficZone = false,
+            bool avoidOddEvenZone = false,
+            bool alternative = false);
+
+        Task<NeshanDirectionResult> DirectionWithOutTraffic(
+            Location origin,
+            Location destination,
+            short bearing,
+            IEnumerable<Location> waypoints = null,
+            bool avoidTrafficZone = false,
+            bool avoidOddEvenZone = false,
+            bool alternative = false);
     }
 }
