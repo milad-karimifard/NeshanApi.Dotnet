@@ -5,9 +5,17 @@ namespace NeshanApi.Dotnet.Models
 {
     public class Location : IEquatable<Location>
     {
-        [JsonProperty("y")] public double Latitude { get; set; }
+        [JsonProperty("y")]
+        public double Latitude { get; set; }
 
-        [JsonProperty("x")] public double Longitude { get; set; }
+        [JsonProperty("x")]
+        public double Longitude { get; set; }
+        
+        [JsonProperty("latitude")]
+        private double LatitudeSecondName { set => Latitude = value; }
+        
+        [JsonProperty("longitude")]
+        private double LongitudeSecondName { set => Longitude = value; }
 
         #region Equatabllity
 

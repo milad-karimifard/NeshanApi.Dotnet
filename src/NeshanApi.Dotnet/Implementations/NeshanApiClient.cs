@@ -187,6 +187,22 @@ namespace NeshanApi.Dotnet.Implementations
             return result;
         }
 
+        public async Task<NeshanMapMatchingResult> MapMatching(IEnumerable<Location> points)
+        {
+            var uri = $"v1/map-matching?";
+
+            var pointsUrl = string.Join('|', points
+                .Select(o => $"{o.Latitude},{o.Longitude}").ToList());
+
+            uri += $"path={pointsUrl}&";
+
+            var response = await _client.GetAsync(uri);
+            var result = await HandleResponse<NeshanMapMatchingResult>(response);
+
+            return result;
+        }
+
+        
         #endregion
 
         #region Private Methods

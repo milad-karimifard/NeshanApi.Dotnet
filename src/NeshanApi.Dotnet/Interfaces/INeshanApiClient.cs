@@ -41,5 +41,7 @@ namespace NeshanApi.Dotnet.Interfaces
             bool avoidTrafficZone = false,
             bool avoidOddEvenZone = false,
             bool alternative = false);
+
+        Task<NeshanMapMatchingResult> MapMatching(IEnumerable<Location> points);
     }
 }
