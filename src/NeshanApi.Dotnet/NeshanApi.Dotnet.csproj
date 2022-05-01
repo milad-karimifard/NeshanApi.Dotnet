@@ -2,7 +2,20 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Authors>Milad Karimifard</Authors>
+    <PackageProjectUrl>https://github.com/milad-karimifard/NeshanApi.Dotnet</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/milad-karimifard/NeshanApi.Dotnet</RepositoryUrl>
+    <PackageTags>neshan,neshan.org,neshanapi,neshan-api</PackageTags>
+    <Description>this is a wrapper to help you work with neshan.org API in dotnet</Description>
+    <PackageIcon>package-logo.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\assets\package-logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
